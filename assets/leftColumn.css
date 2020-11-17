@@ -1,0 +1,26 @@
+#inner-column-left{
+    background-color: lightgrey;
+    float: left;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    padding: 0 15px 15px;
+    border-width: medium;
+    border-color: black;
+    border-style: solid;
+    overflow: auto;
+}
+
+#outer-column-left{
+    float: left;
+    height: 100%;
+    width: 25%;
+    background-color: white;
+    padding: 10px;
+}
+
+
+
+
+
+
