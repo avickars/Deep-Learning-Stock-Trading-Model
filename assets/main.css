@@ -72,28 +72,13 @@
     color: darkred;
 }
 
-#collapse-1{
-    height: 300px;
+#stock-collapse{
+    height: 100px;
 }
 
-#collapse-3{
-    height: 300px;
+.collapse{
+    background-color: white;
 }
 
-#collapse-4{
-    height: 300px;
-}
-
-.user-inputs{
-    width: 100%;
-}
-
-.no-bottom-space{
-    margin-bottom: -6px;
-}
-
-.sub-text:hover{
-    color: darkred;
-}
 
 
