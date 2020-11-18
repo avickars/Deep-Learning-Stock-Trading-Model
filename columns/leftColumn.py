@@ -6,11 +6,11 @@ stocks = html.Div(
     [
         dbc.Button(
             "Stocks",
-            id="stocks-collapse-button",
+            id="group-1-toggle",
             className="sidebarbuttons"
         ),
         dbc.Collapse(
-            dbc.CardBody(children=[dcc.Dropdown(options=[{"label":"All","value":"all"},
+            dbc.CardBody(children=[dcc.Dropdown(options=[{"label": "All", "value": "all"},
                                                          {"label": "Ford", "value": "ford"},
                                                          {"label": "Tesla", "value": "tesla"},
                                                          {"label": "Honda", "value": "honda"},
@@ -19,34 +19,48 @@ stocks = html.Div(
                                                 id="course-dropdown",
                                                 optionHeight=20,
                                                 multi=True,
-                                                value="All")], id="card-body"),
-            id="stocks-collapse"
+                                                value="All")], className='collapse-body'),
+            id="collapse-1"
         ),
     ]
 )
 
-# def stocks():
-#     # we use this function to make the example items to avoid code duplication
-#     return dbc.Card(
-#         [
-#             dbc.CardHeader(
-#                 html.H2(
-#                     dbc.Button("Course",
-#                                id="stocks-button",
-#                                className="sidebarbuttons"),
-#                     className="headersidebar"),
-#                 className="sidebarcards"
-#             ),
-#             dbc.Collapse(
-#                 # dbc.CardBody(children=[dash_table.DataTable(data=readCourseDataFromApp('canvas/'))], id="card-body"),
-#                 dbc.CardBody(children=[dcc.Dropdown(options=[{"label":"Ford","value":"ford"},
-#                                                              {"label":"Tesla","value":"tesla"},
-#                                                              {"label":"Honda","value":"honda"},
-#                                                              {"label":"General Motors","value":"gm"},
-#                                                              {"label":"Fiat/Chrysler","value":"fiat"}],
-#                                                     id="course-dropdown",
-#                                                     optionHeight=120)], id="card-body"),
-#                 id="collapse-1"
-#             ),
-#         ]
-#     )
+timeLine = html.Div(
+    [
+        dbc.Button(
+            "Time Range",
+            id="group-2-toggle",
+            className="sidebarbuttons"
+        ),
+        dbc.Collapse(
+            dbc.CardBody(children=[dcc.RangeSlider(
+                id='my-range-slider',
+                min=0,
+                max=20,
+                step=0.5,
+                value=[5, 15]
+            ),
+                html.Div(id='output-container-range-slider')], className='collapse-body', id="timeLine-collapse"),
+            id="collapse-2"
+        ),
+    ]
+)
+
+seed = html.Div(
+    [
+        dbc.Button(
+            "Time Range",
+            id="group-3-toggle",
+            className="sidebarbuttons"
+        ),
+        dbc.Collapse(
+            dbc.CardBody(children=[
+                dcc.Input(
+                    id="input_range", type="number", placeholder="input with range",
+                    min=1, step=1,
+                )
+            ], className='collapse-body', id="seed-collapse"),
+            id="collapse-3"
+        ),
+    ]
+)

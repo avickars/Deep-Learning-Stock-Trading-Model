@@ -72,13 +72,12 @@
     color: darkred;
 }
 
-#stock-collapse{
-    height: 100px;
-}
 
-.collapse{
+.collapse-body{
+    height: 200px;
     background-color: white;
 }
+
 
 
 
