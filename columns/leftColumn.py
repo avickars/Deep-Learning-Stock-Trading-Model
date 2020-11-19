@@ -49,15 +49,14 @@ timeLine = html.Div(
 seed = html.Div(
     [
         dbc.Button(
-            "Time Range",
+            "Seed Money",
             id="group-3-toggle",
             className="sidebarbuttons"
         ),
         dbc.Collapse(
             dbc.CardBody(children=[
                 dcc.Input(
-                    id="input_range", type="number", placeholder="input with range",
-                    min=1, step=1,
+                    id="input_range", type="number", min=10, step=10, value = 10
                 )
             ], className='collapse-body', id="seed-collapse"),
             id="collapse-3"
