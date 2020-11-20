@@ -49,12 +49,12 @@ def transform(df, n=40):
 def loadModel(stockName):
     # CITATION: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
     # load json and create model
-    json_file = open(f'data/{stockName}BatchTraining1500.json', 'r')
+    json_file = open(f'data/{stockName}EpochTraining2000.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
     # load weights into new model
-    model.load_weights(f"data/{stockName}BatchTraining1500.h5")
+    model.load_weights(f"data/{stockName}EpochTraining2000.h5")
     return model
 
 

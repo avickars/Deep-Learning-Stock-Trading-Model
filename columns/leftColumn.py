@@ -1,6 +1,10 @@
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import pandas as pd
+
+date = pd.read_csv('Data/dateRange.csv')
+date['Date'] = pd.to_datetime(date['Date'])
 
 stocks = html.Div(
     [
@@ -36,9 +40,9 @@ timeLine = html.Div(
             dbc.CardBody(children=[dcc.RangeSlider(
                 id='my-range-slider',
                 min=0,
-                max=20,
-                step=0.5,
-                value=[5, 15]
+                max=len(date)-1,
+                step=1,
+                value=[0, len(date)-1]
             ),
                 html.Div(id='output-container-range-slider')], className='collapse-body', id="timeLine-collapse"),
             id="collapse-2"

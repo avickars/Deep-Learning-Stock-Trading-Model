@@ -1,11 +1,15 @@
 import dash
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from columns.leftColumn import stocks, timeLine, seed
+from columns.leftColumn import stocks, timeLine, seed, date
 from columns.rightColumn import plots
 from dash.dependencies import Input, Output, State
+import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+# Reading in Data
+ford = pd.read_csv('Data/fordComplete.csv', index_col = 'Date')
 
 navBar = dbc.Navbar(children=[
     html.A(
@@ -68,7 +72,9 @@ def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
     dash.dependencies.Output('output-container-range-slider', 'children'),
     [dash.dependencies.Input('my-range-slider', 'value')])
 def update_output(value):
-    return 'You have selected "{}"'.format(value)
+    print(f"{str(date.iloc[value[0],0])} - {str(date.iloc[value[1],0])}")
+    return f"{str(date.iloc[value[0],0])[0:10]} - {str(date.iloc[value[1],0])[0:10]}"
+    
 
 
 # Start the Dash server
