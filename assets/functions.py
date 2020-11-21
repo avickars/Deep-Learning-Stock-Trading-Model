@@ -16,7 +16,7 @@ def optimizer(startDate, endDate, seedMoney, ford):
     stocks = {'ford':ford}
 
     # Initialize df to hold all the stocks bought
-    stockTrades = pd.DataFrame(columns = ['date', 'stock', 'buyPrice', 'numShares', 'sellPrice', 'profit'])
+    stockTrades = pd.DataFrame(columns = ['date', 'stock', 'buyPrice', 'numShares', 'sellPrice', 'sellDate', 'profit'])
     
     # Initialize variable to hold the cash we currently have to spend
     liquidity = seedMoney
@@ -42,6 +42,7 @@ def optimizer(startDate, endDate, seedMoney, ford):
                     moneyOut = stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'buyPrice'].values[0]
                     moneyIn = stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'sellPrice'].values[0]
                     stockTrades.loc[indices,'profit'] = stocks[stock].loc[date,:]['Open'] = moneyIn - moneyOut
+                    stockTrades.loc[indices,'sellDate'] = date
                     
                     # Updating the liquidity value to reflect the stocks we just sold
                     liquidity = liquidity + moneyIn
@@ -57,7 +58,6 @@ def optimizer(startDate, endDate, seedMoney, ford):
         # if i > 400:
         #     break
     print(stockTrades)
-    print(stockTrades['profit'].sum())
 
 
 optimizer('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, 'dolthis')
