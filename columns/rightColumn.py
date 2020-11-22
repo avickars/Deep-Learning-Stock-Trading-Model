@@ -1,11 +1,15 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
+import pandas as pd
+import dash_core_components as dcc
+# from functions import trader
 
-timeSeriesPlot = dbc.Card(
+
+
+predictions = dbc.Card(
     dbc.CardBody(
         [
-            html.P("This is tab 1!", className="card-text"),
-            dbc.Button("Click here", color="success"),
+            dcc.Graph(id = 'prediction-plot')
         ]
     ),
     className="mt-3",
@@ -34,7 +38,7 @@ resids = dbc.Card(
 
 plots = dbc.Tabs(
     [
-        dbc.Tab(timeSeriesPlot, label="Predictions"),
+        dbc.Tab(predictions, label="Predictions"),
         dbc.Tab(MSE, label="Mean Squared Error"),
         dbc.Tab(resids, label="Residuals"),
     ]

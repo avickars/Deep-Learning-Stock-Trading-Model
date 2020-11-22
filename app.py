@@ -1,15 +1,23 @@
 import dash
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from columns.leftColumn import stocks, timeLine, seed, date
+from columns.leftColumn import stocks, timeLine, seed, date, submit, risk
 from columns.rightColumn import plots
 from dash.dependencies import Input, Output, State
+from columns.functions import trader, predictionPlot
 import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Reading in Data
-ford = pd.read_csv('Data/fordComplete.csv', index_col = 'Date')
+data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
+
+date = pd.read_csv('Data/dateRange.csv')
+date['Date'] = pd.to_datetime(date['Date'])
+
+# allTrades = trader(date.iloc[0,:]['Date'], date.iloc[-1,:]['Date'], 1000,data)
+
+allStocks = ['ford', 'tesla']
 
 navBar = dbc.Navbar(children=[
     html.A(
@@ -37,7 +45,12 @@ app.layout = html.Div(children=[
             html.Br(),
             timeLine,
             html.Br(),
-            seed
+            seed,
+            html.Br(),
+            risk,
+            html.Br(),
+            submit
+
                                     ], id="inner-column-left", className="column"), className="col-outer", id="outer-column-left"),
         html.Div(html.Div(children=[
             plots
@@ -48,32 +61,59 @@ app.layout = html.Div(children=[
 
 # Left column collapse
 @app.callback(
-    [Output(f"collapse-{i}", "is_open") for i in range(1, 4)],
-    [Input(f"group-{i}-toggle", "n_clicks") for i in range(1, 4)],
-    [State(f"collapse-{i}", "is_open") for i in range(1, 4)],
+    [Output(f"collapse-{i}", "is_open") for i in range(1, 6)],
+    [Input(f"group-{i}-toggle", "n_clicks") for i in range(1, 6)],
+    [State(f"collapse-{i}", "is_open") for i in range(1, 6)],
 )
-def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
+def toggle_accordion(n1, n2, n3, n4, n5, is_open1, is_open2, is_open3, is_open4, is_open5):
     ctx = dash.callback_context
 
     if not ctx.triggered:
-        return False, False, False
+        return False, False, False, False, False
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
     if button_id == "group-1-toggle" and n1:
-        return not is_open1, False, False
+        return not is_open1, False, False, False, False
     elif button_id == "group-2-toggle" and n2:
-        return False, not is_open2, False
+        return False, not is_open2, False, False, False
     elif button_id == "group-3-toggle" and n3:
-        return False, False, not is_open3
-    return False, False, False
+        return False, False, not is_open3, False, False
+    elif button_id == "group-4-toggle" and n4:
+        return False, False, False, not is_open4, False
+    elif button_id == "group-5-toggle" and n5:
+        return False, False, False, False, not is_open5
+    return False, False, False, False, False
 
+# Call back for date slider in left column
 @app.callback(
-    dash.dependencies.Output('output-container-range-slider', 'children'),
-    [dash.dependencies.Input('my-range-slider', 'value')])
+    Output('output-container-range-slider', 'children'),
+    [Input('my-range-slider', 'value')])
 def update_output(value):
-    print(f"{str(date.iloc[value[0],0])} - {str(date.iloc[value[1],0])}")
     return f"{str(date.iloc[value[0],0])[0:10]} - {str(date.iloc[value[1],0])[0:10]}"
+
+
+# Callback for submit button
+@app.callback([
+    Output('prediction-plot', 'figure'),
+], [
+    Input("course-dropdown", 'value'),
+    Input('my-range-slider', 'value'),
+    Input("seed-input", 'value'),
+    Input("submit-changes-button", 'n_clicks'),
+    Input("risk-input", 'value')
+])
+def filterDashboard(stocks, dateRange, seedValue, numClicks):
+    # return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],["ford"])]
+    if numClicks is None:  # Default Option
+        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
+    else:
+        if 'all' in stocks:  # if all stocks are selected
+            return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
+        else: # all other options
+            return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
+
+
     
 
 

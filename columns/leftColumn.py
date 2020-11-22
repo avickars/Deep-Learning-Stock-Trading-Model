@@ -6,6 +6,7 @@ import pandas as pd
 date = pd.read_csv('Data/dateRange.csv')
 date['Date'] = pd.to_datetime(date['Date'])
 
+
 stocks = html.Div(
     [
         dbc.Button(
@@ -23,7 +24,7 @@ stocks = html.Div(
                                                 id="course-dropdown",
                                                 optionHeight=20,
                                                 multi=True,
-                                                value="All")], className='collapse-body'),
+                                                value="all")], className='collapse-body'),
             id="collapse-1"
         ),
     ]
@@ -50,6 +51,7 @@ timeLine = html.Div(
     ]
 )
 
+
 seed = html.Div(
     [
         dbc.Button(
@@ -60,10 +62,49 @@ seed = html.Div(
         dbc.Collapse(
             dbc.CardBody(children=[
                 dcc.Input(
-                    id="input_range", type="number", min=10, step=10, value = 10
+                    id="seed-input", type="number", min=10, step=10, value = 10
                 )
             ], className='collapse-body', id="seed-collapse"),
             id="collapse-3"
         ),
     ]
 )
+
+submit = html.Div(
+    [
+        dbc.Button(
+            "Submit Changes",
+            id="group-4-toggle",
+            className="sidebarbuttons"
+        ),
+        dbc.Collapse(
+            dbc.CardBody(children=[
+                 dbc.Button(
+                    "Submit",
+                    id="submit-changes-button"
+        )
+            ], className='collapse-body', id="submit-collapse"),
+            id="collapse-4"
+        ),
+    ]
+)
+
+risk = html.Div(
+    [
+        dbc.Button(
+            "Risk",
+            id="group-5-toggle",
+            className="sidebarbuttons"
+        ),
+        dbc.Collapse(
+            dbc.CardBody(children=[
+                dcc.Input(
+                    id="risk-input", type="number", min=0, max=1, step=0.05, value = 0.5
+                )
+            ], className='collapse-body', id="risk-collapse"),
+            id="collapse-5"
+        ),
+    ]
+)
+
+
