@@ -103,9 +103,10 @@ def update_output(value):
     Input("submit-changes-button", 'n_clicks'),
     Input("risk-input", 'value')
 ])
-def filterDashboard(stocks, dateRange, seedValue, numClicks):
+def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
     # return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],["ford"])]
     if numClicks is None:  # Default Option
+        print("here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
     else:
         if 'all' in stocks:  # if all stocks are selected
