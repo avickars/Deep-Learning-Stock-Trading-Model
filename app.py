@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 from columns.leftColumn import stocks, timeLine, seed, date, submit, risk
 from columns.rightColumn import plots
 from dash.dependencies import Input, Output, State
-from columns.functions import trader, predictionPlot
+from columns.functions import trader, predictionPlot, profitPlot
 import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -14,8 +14,6 @@ data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
 
 date = pd.read_csv('Data/dateRange.csv')
 date['Date'] = pd.to_datetime(date['Date'])
-
-# allTrades = trader(date.iloc[0,:]['Date'], date.iloc[-1,:]['Date'], 1000,data)
 
 allStocks = ['ford', 'tesla']
 
@@ -96,6 +94,7 @@ def update_output(value):
 # Callback for submit button
 @app.callback([
     Output('prediction-plot', 'figure'),
+    Output('profit-plot', 'figure')
 ], [
     Input("course-dropdown", 'value'),
     Input('my-range-slider', 'value'),
@@ -106,8 +105,11 @@ def update_output(value):
 def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
     # return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],["ford"])]
     if numClicks is None:  # Default Option
-        print("here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
+        groupProfits, totalProfits = trader(date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0], seedValue, data, allStocks, riskInput)
+        allStocksWithAll = set(allStocks)
+        allStocksWithAll.add('all')
+        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks),
+                profitPlot(groupProfits, totalProfits, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0], allStocksWithAll)]
     else:
         if 'all' in stocks:  # if all stocks are selected
             return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
@@ -120,4 +122,5 @@ def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
 
 # Start the Dash server
 if __name__ == '__main__':
+    # app.run_server(debug=True)
     app.run_server()

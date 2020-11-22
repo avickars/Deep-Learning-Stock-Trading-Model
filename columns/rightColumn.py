@@ -18,8 +18,7 @@ predictions = dbc.Card(
 MSE = dbc.Card(
     dbc.CardBody(
         [
-            html.P("This is tab 2!", className="card-text"),
-            dbc.Button("Don't click here", color="danger"),
+            dcc.Graph(id = 'profit-plot')
         ]
     ),
     className="mt-3",
@@ -39,7 +38,7 @@ resids = dbc.Card(
 plots = dbc.Tabs(
     [
         dbc.Tab(predictions, label="Predictions"),
-        dbc.Tab(MSE, label="Mean Squared Error"),
+        dbc.Tab(MSE, label="Profit"),
         dbc.Tab(resids, label="Residuals"),
     ]
 )

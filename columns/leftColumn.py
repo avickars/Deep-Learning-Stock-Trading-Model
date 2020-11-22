@@ -62,7 +62,7 @@ seed = html.Div(
         dbc.Collapse(
             dbc.CardBody(children=[
                 dcc.Input(
-                    id="seed-input", type="number", min=10, step=10, value = 10
+                    id="seed-input", type="number", min=1000, step=100, value = 1000
                 )
             ], className='collapse-body', id="seed-collapse"),
             id="collapse-3"
