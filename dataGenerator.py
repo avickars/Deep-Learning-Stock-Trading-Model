@@ -16,15 +16,15 @@ def getData(company):
 
 
 def main():
-    getData('FORD').to_csv('Data/ford.csv')
+    # getData('FORD').to_csv('Data/ford.csv')
 
-    getData('FCAU').to_csv('Data/fiatChrysler.csv')
+    getData('PEP').to_csv('Data/pepsi.csv')
 
-    getData('TSLA').to_csv('Data/tesla.csv')
+    # getData('TSLA').to_csv('Data/tesla.csv')
 
-    getData('GM').to_csv('Data/generalMotors.csv')
+    getData('TWRT').to_csv('Data/twitter.csv')
 
-    getData('HMC').to_csv('Data/honda.csv')
+    getData('JWN').to_csv('Data/nordstrom.csv')
 
 
 if __name__ == '__main__':

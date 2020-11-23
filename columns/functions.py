@@ -6,6 +6,12 @@ import plotly.express as px
 pd.options.mode.chained_assignment = None  # default='warn'
 import pulp
 
+stockNames = {"ford": "Ford",
+            "boa": "Bank of America",
+            "exxon": "Exxon Mobil",
+            "forward":"Forward Industries",
+            'nordstrom':"Nordstrom"}
+
 def optimizer(data, liquidity, risk):
     data = data.set_index('stock')
 
@@ -49,8 +55,7 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     data = data[data.index >= startDate]
     data = data[data.index <= endDate]
 
-    stocks = {}
-
+    stocks={}
     for stock in selectedStocks:
         stocks[stock] = data[data['stock'] == stock]
 
@@ -63,9 +68,7 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     i = 1
    
     for date in stocks[selectedStocks[0]].index: # Ierating through each day for the simulation
-
         for stock in selectedStocks: # Iterating through each stock to make sure we sell off any stock that we want to
-
             # Lets sell some stock!
             if stocks[stock].loc[date,:]['predictedAction'] == 'sell':
                 if np.any((stockTrades['stock'] == stock) & (stockTrades['sellPrice'].isnull())): # Testing if we have any stocks to sell for this company, if yes continue
@@ -100,6 +103,7 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
             price = potentialStockPurchase['price']
             liquidity = liquidity - np.round(numShares * price,decimals=2)
             stockTrades = stockTrades.append({'date':date, 'stock':stock, 'buyPrice': price, 'numShares': numShares}, ignore_index=True)
+        
 
 
         
@@ -116,7 +120,9 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     totalProfits = stockTrades.groupby('date').sum('profit')['profit'].cumsum()
     totalProfits = pd.DataFrame(data=totalProfits, columns=['profit'])
 
-    return groupProfits, totalProfits
+    stockTrades = stockTrades.set_index('date')
+
+    return groupProfits, totalProfits, stockTrades
 
 def predictionPlot(data, startDate, endDate, stocks):
     startDate = pd.to_datetime(startDate)
@@ -135,22 +141,44 @@ def predictionPlot(data, startDate, endDate, stocks):
     fig = go.Figure()
     i = 0
     for stock in stocks:
+        # Filtering the data
         filterData = data[(data['stock'] == stock) & (data.index >= startDate) & (data.index <= endDate)]
 
+        # Plotting the truth
         fig.add_trace(
             go.Scatter(x=filterData.index, 
                 y=filterData['Open'], 
-                name=f"{stock} - Truth",
+                name=stockNames[stock],
                 mode='lines',
-                line = dict(color=DEFAULT_PLOTLY_COLORS[i])))
+                line = dict(color=DEFAULT_PLOTLY_COLORS[i]),
+                hovertemplate ='%{text}',
+                text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
+                        'Opening Price: '+ "<b>" + np.round(filterData['Open'],2).astype(str) + "</b> <br>",
+                hoverlabel=dict(
+                    bgcolor=DEFAULT_PLOTLY_COLORS[i],
+                    font_color='black',
+                    font_size=12,
+                    font_family="Rockwell"),
+                legendgroup = stockNames[stock]))
 
+        # Plotting our predicted opening price
         fig.add_trace(
             go.Scatter(x=filterData.index, 
                 y=filterData['predicted'],
-                name=f"{stock} - Predicted",
-                line = dict(dash='dot', width=3, color=DEFAULT_PLOTLY_COLORS[i])))
-        i = i + 1\
-
+                name=stockNames[stock],
+                line = dict(dash='dot', width=3, color=DEFAULT_PLOTLY_COLORS[i]),
+                hovertemplate ='%{text}',
+                text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
+                        'Predicted Opening Price: '+ "<b>" + np.round(filterData['predicted'],2).astype(str) + "</b> <br>",
+                hoverlabel=dict(
+                    bgcolor=DEFAULT_PLOTLY_COLORS[i],
+                    font_color='black',
+                    font_size=12,
+                    font_family="Rockwell"),
+                legendgroup = stockNames[stock],
+                showlegend=False
+                    ))
+        i = i + 1
     return fig
 
 def profitPlot(groupData, totalData, startDate, endDate, stocks):
@@ -177,37 +205,101 @@ def profitPlot(groupData, totalData, startDate, endDate, stocks):
                 line = dict(color=DEFAULT_PLOTLY_COLORS[i])))
         i = i + 1
 
-  
+    groupData = pd.DataFrame(groupData, columns=groupData.columns, index=pd.to_datetime(groupData.index))
 
     for stock in stocks:
         if stock == 'all':
             continue
-        print(groupData)
         filterData = groupData[(groupData['stock'] == stock) & (groupData.index >= startDate) & (groupData.index <= endDate)]
-
-        print(filterData)
 
         fig.add_trace(
             go.Scatter(x=filterData.index, 
                 y=filterData['groupCumProfit'], 
-                name=f"{stock}",
+                name=stockNames[stock],
                 mode='lines',
-                line = dict(color=DEFAULT_PLOTLY_COLORS[i])))
+                line = dict(color=DEFAULT_PLOTLY_COLORS[i]),
+                hovertemplate ='%{text}',
+                text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
+                        'Cumulative Profit: '+ "<b>" + np.round(filterData['groupCumProfit'],2).astype(str) + "</b> <br>",
+                hoverlabel=dict(
+                    bgcolor=DEFAULT_PLOTLY_COLORS[i],
+                    font_color='black',
+                    font_size=12,
+                    font_family="Rockwell")
+    
+                ))
         i = i + 1
     return fig
+
+def tradePlot(stockTrades, startDate, endDate, stocks):
+    startDate = pd.to_datetime(startDate)
+    endDate = pd.to_datetime(endDate)
+
+    # CITATION: https://community.plotly.com/t/plotly-colours-list/11730/2
+    DEFAULT_PLOTLY_COLORS=['rgb(31, 119, 180)', 'rgb(255, 127, 14)',
+                       'rgb(44, 160, 44)', 'rgb(214, 39, 40)',
+                       'rgb(148, 103, 189)', 'rgb(140, 86, 75)',
+                       'rgb(227, 119, 194)', 'rgb(127, 127, 127)',
+                       'rgb(188, 189, 34)', 'rgb(23, 190, 207)']
+
+    fig = go.Figure()
+
+    stockTrades = pd.DataFrame(stockTrades, columns=stockTrades.columns, index=pd.to_datetime(stockTrades.index))
+    stockTrades['sellDate'] = pd.to_datetime(stockTrades['sellDate'])
+    i = 0
+    for stock in stocks:
+        if stock == 'all':
+            continue
+        filterData = stockTrades[(stockTrades['stock'] == stock) & (stockTrades.index >= startDate) & (stockTrades.index <= endDate)]
+
+        fig.add_trace(
+            go.Scatter(x=filterData.index, 
+                y=filterData['profit'], 
+                name=stockNames[stock],
+                mode='markers',
+                hoverinfo= 'text',
+                line = dict(color=DEFAULT_PLOTLY_COLORS[i]),
+                hovertemplate ='%{text}',
+                text = 'Trade Iniated: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
+                        'Number of Shares: '+ "<b>" + filterData['numShares'].astype(str) + "</b> <br>" +
+                        'Buy Price: '+ "<b>" + np.round(filterData['buyPrice'],2).astype(str) + "</b> <br>" +
+                        'Trade Ended: '+ "<b>" + filterData['sellDate'].astype(str) + "</b> <br>" +
+                        'Sell Price: '+ "<b>" + np.round(filterData['sellPrice'],2).astype(str) + "</b> <br>" +
+                        'Profit: '+ "<b>" + np.round(filterData['profit'],2).astype(str) + "</b> <br>",
+                hoverlabel=dict(
+                    bgcolor=DEFAULT_PLOTLY_COLORS[i],
+                    font_color='black',
+                    font_size=12,
+                    font_family="Rockwell")
+    
+                ))
+        i = i + 1
+    return fig
+
 # Reading in Data
 # data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
 # print(trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, ['ford', 'tesla'], 0.5))
+# stocks = ["forward","nordstrom"]
+# stocks = ['ford', "nordstrom", "boa", "exxon", "forward"]
 
 # data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
+# predictionPlot(data,'2018-11-19 00:00:00', '2020-11-16 00:00:00',stocks)
 
-# groupProfits, totalProfits = trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, ['ford', 'tesla'], 0.5)
+
+
+# groupProfits, totalProfits = trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, stocks, 1)
+# groupProfits, totalProfits, stockTrades = trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, ["forward", "nordstrom"], 1)
+# groupProfits.to_csv('group.csv')
+# totalProfits.to_csv('total.csv')
+# stockTrades.to_csv('trades.csv')
+# stockTrades = pd.read_csv('trades.csv',index_col='date')
+# tradePlot(stockTrades,'2018-11-19 00:00:00', '2020-11-16 00:00:00',stocks)
 # groupProfits = groupProfits.set_index('date')
-# # totalProfits = totalProfits.set_index('date')
+# totalProfits = totalProfits.set_index('date')
 
 # groupProfits = pd.read_csv('group.csv', index_col='date')
 # totalProfits = pd.read_csv('total.csv', index_col='date')
-# profitPlot(groupProfits,totalProfits, '2018-11-19 00:00:00', '2020-11-16 00:00:00', ['all','ford', 'tesla'])
+# profitPlot(groupProfits,totalProfits, '2018-11-19 00:00:00', '2020-11-16 00:00:00', stocks)
 
 
 

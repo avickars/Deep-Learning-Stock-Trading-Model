@@ -15,16 +15,16 @@ stocks = html.Div(
             className="sidebarbuttons"
         ),
         dbc.Collapse(
-            dbc.CardBody(children=[dcc.Dropdown(options=[{"label": "All", "value": "all"},
-                                                         {"label": "Ford", "value": "ford"},
-                                                         {"label": "Tesla", "value": "tesla"},
-                                                         {"label": "Honda", "value": "honda"},
-                                                         {"label": "General Motors", "value": "gm"},
-                                                         {"label": "Fiat/Chrysler", "value": "fiat"}],
+            dbc.CardBody(children=[dcc.Dropdown(options=[{"label": "Ford", "value": "ford"},
+                                                         {"label": "Nordstrom", "value": "nordstrom"},
+                                                         {"label": "Bank of America", "value": "boa"},
+                                                         {"label": "Exxon Mobil", "value": "exxon"},
+                                                         {"label": "Forward Industries", "value": "forward"}],
                                                 id="course-dropdown",
                                                 optionHeight=20,
                                                 multi=True,
-                                                value="all")], className='collapse-body'),
+                                                value=['forward'])], className='collapse-body'),
+                                                # value=['ford','nordstrom','boa','exxon','forward'])], className='collapse-body'),
             id="collapse-1"
         ),
     ]
@@ -99,7 +99,7 @@ risk = html.Div(
         dbc.Collapse(
             dbc.CardBody(children=[
                 dcc.Input(
-                    id="risk-input", type="number", min=0, max=1, step=0.05, value = 0.5
+                    id="risk-input", type="number", min=0, max=1, step=0.05, value = 1
                 )
             ], className='collapse-body', id="risk-collapse"),
             id="collapse-5"

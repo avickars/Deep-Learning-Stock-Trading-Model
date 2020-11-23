@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 from columns.leftColumn import stocks, timeLine, seed, date, submit, risk
 from columns.rightColumn import plots
 from dash.dependencies import Input, Output, State
-from columns.functions import trader, predictionPlot, profitPlot
+from columns.functions import trader, predictionPlot, profitPlot, tradePlot
 import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -15,7 +15,7 @@ data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
 date = pd.read_csv('Data/dateRange.csv')
 date['Date'] = pd.to_datetime(date['Date'])
 
-allStocks = ['ford', 'tesla']
+allStocks = ['ford', "nordstrom", "boa", "exxon", "forward"]
 
 navBar = dbc.Navbar(children=[
     html.A(
@@ -23,7 +23,7 @@ navBar = dbc.Navbar(children=[
         dbc.Row(
             [
                 html.Img(src="assets/CMPTLogo.png"),
-                dbc.Col(dbc.NavbarBrand("CMPT 353 Project: Auto Stock Predictor", className="ml-2"), align="end"),
+                dbc.Col(dbc.NavbarBrand("CMPT 353 Project: Stock Predictor", className="ml-2"), align="end"),
             ],
             no_gutters=True,
         ),
@@ -94,7 +94,8 @@ def update_output(value):
 # Callback for submit button
 @app.callback([
     Output('prediction-plot', 'figure'),
-    Output('profit-plot', 'figure')
+    Output('profit-plot', 'figure'),
+    Output('trade-plot', 'figure')
 ], [
     Input("course-dropdown", 'value'),
     Input('my-range-slider', 'value'),
@@ -105,16 +106,16 @@ def update_output(value):
 def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
     # return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],["ford"])]
     if numClicks is None:  # Default Option
-        groupProfits, totalProfits = trader(date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0], seedValue, data, allStocks, riskInput)
-        allStocksWithAll = set(allStocks)
-        allStocksWithAll.add('all')
-        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks),
-                profitPlot(groupProfits, totalProfits, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0], allStocksWithAll)]
+        groupProfits, totalProfits, stockTrades = trader(date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0], seedValue, data, stocks, riskInput)
+        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks),
+                profitPlot(groupProfits, totalProfits, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0], stocks),
+                tradePlot(stockTrades, date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0],stocks)]
     else:
-        if 'all' in stocks:  # if all stocks are selected
-            return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
-        else: # all other options
-            return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
+        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
+        # if 'all' in stocks:  # if all stocks are selected
+        #     return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
+        # else: # all other options
+        #     return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
 
 
     
@@ -122,5 +123,4 @@ def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
 
 # Start the Dash server
 if __name__ == '__main__':
-    # app.run_server(debug=True)
-    app.run_server()
+    app.run_server(debug=True)
