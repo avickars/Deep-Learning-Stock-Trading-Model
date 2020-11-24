@@ -2,8 +2,9 @@ import dash
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from columns.leftColumn import stocks, timeLine, seed, date, submit, risk
-from columns.rightColumn import plots
+from columns.rightColumn import predictions, profit, trades
 from dash.dependencies import Input, Output, State
+import dash_core_components as dcc
 from columns.functions import trader, predictionPlot, profitPlot, tradePlot
 import pandas as pd
 
@@ -14,8 +15,6 @@ data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
 
 date = pd.read_csv('Data/dateRange.csv')
 date['Date'] = pd.to_datetime(date['Date'])
-
-allStocks = ['ford', "nordstrom", "boa", "exxon", "forward"]
 
 navBar = dbc.Navbar(children=[
     html.A(
@@ -33,6 +32,7 @@ navBar = dbc.Navbar(children=[
     dark=True,
 )
 
+
 # App layout
 app.layout = html.Div(children=[
     html.Div(id="row-1", children=[navBar]),
@@ -47,10 +47,15 @@ app.layout = html.Div(children=[
             html.Br(),
             risk,
             html.Br(),
-            submit
-
-                                    ], id="inner-column-left", className="column"), className="col-outer", id="outer-column-left"),
-        html.Div(html.Div(children=[plots], id="inner-column-right"), className="col-outer", id="outer-column-right")
+            submit], id="inner-column-left", className="column"), className="col-outer", id="outer-column-left"),
+        html.Div(html.Div(children=[
+            dcc.Tabs([
+                dcc.Tab(label="Predictions", children=[predictions], className = 'os-tab'),
+                dcc.Tab(label="Trades", children=[trades], className = 'os-tab'),
+                dcc.Tab(label="Profits", children=[profit], className = 'os-tab')
+            ], className="os-tab-container", id="tabs")
+        ], id="inner-column-right"), className="col-outer", id="outer-column-right")
+        # html.Div(html.Div(children=[plots], id="inner-column-right"), className="col-outer", id="outer-column-right")
     ])
 ], id="base")
 

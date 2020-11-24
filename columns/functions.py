@@ -194,7 +194,7 @@ def profitPlot(groupData, totalData, startDate, endDate, stocks):
 
     fig = go.Figure()
     i = 0
-    if 'all' in stocks:
+    if len(stocks) > 1:
         totalData = pd.DataFrame(totalData, columns=totalData.columns, index=pd.to_datetime(totalData.index))
         filterData = totalData [ (totalData .index >= startDate) & (totalData .index <= endDate)]
         fig.add_trace(

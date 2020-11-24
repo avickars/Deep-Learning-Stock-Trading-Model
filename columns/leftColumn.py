@@ -62,7 +62,9 @@ seed = html.Div(
             dbc.CardBody(children=[
                 dcc.Input(
                     id="seed-input", type="number", min=1000, step=100, value = 1000
-                )
+                ),
+                html.Br(),
+                html.Small("Amount of money invested")
             ], className='collapse-body', id="seed-collapse"),
             id="collapse-3"
         ),
@@ -100,7 +102,9 @@ risk = html.Div(
             dbc.CardBody(children=[
                 dcc.Input(
                     id="risk-input", type="number", min=0, max=1, step=0.05, value = 1
-                )
+                ),
+                html.Br(),
+                html.Small("The percentage of the total amount of money invested that can be invested in one stock at a time")
             ], className='collapse-body', id="risk-collapse"),
             id="collapse-5"
         ),
