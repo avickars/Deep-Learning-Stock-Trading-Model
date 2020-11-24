@@ -1,10 +1,5 @@
 import dash_bootstrap_components as dbc
-import dash_html_components as html
-import pandas as pd
 import dash_core_components as dcc
-# from functions import trader
-
-
 
 predictions = dbc.Card(
     dbc.CardBody(
@@ -33,12 +28,13 @@ trades = dbc.Card(
     className="mt-3",
 )
 
-
 plots = dbc.Tabs(
     [
         dbc.Tab(predictions, label="Predictions"),
         dbc.Tab(profit, label="Profit"),
         dbc.Tab(trades, label="Trades"),
-    ]
+    ],
+    id='plot-tabs'
 )
+
 

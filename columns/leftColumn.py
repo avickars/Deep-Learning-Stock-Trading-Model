@@ -23,8 +23,7 @@ stocks = html.Div(
                                                 id="course-dropdown",
                                                 optionHeight=20,
                                                 multi=True,
-                                                value=['forward'])], className='collapse-body'),
-                                                # value=['ford','nordstrom','boa','exxon','forward'])], className='collapse-body'),
+                                                value=['ford','nordstrom','boa','exxon','forward'])], className='collapse-body'),
             id="collapse-1"
         ),
     ]
@@ -81,7 +80,8 @@ submit = html.Div(
             dbc.CardBody(children=[
                  dbc.Button(
                     "Submit",
-                    id="submit-changes-button"
+                    id="submit-changes-button",
+                    className='submit-button'
         )
             ], className='collapse-body', id="submit-collapse"),
             id="collapse-4"

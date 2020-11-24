@@ -153,7 +153,7 @@ def predictionPlot(data, startDate, endDate, stocks):
                 line = dict(color=DEFAULT_PLOTLY_COLORS[i]),
                 hovertemplate ='%{text}',
                 text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
-                        'Opening Price: '+ "<b>" + np.round(filterData['Open'],2).astype(str) + "</b> <br>",
+                        'Opening Price: '+ "<b>$" + np.round(filterData['Open'],2).astype(str) + "</b> <br>",
                 hoverlabel=dict(
                     bgcolor=DEFAULT_PLOTLY_COLORS[i],
                     font_color='black',
@@ -169,7 +169,7 @@ def predictionPlot(data, startDate, endDate, stocks):
                 line = dict(dash='dot', width=3, color=DEFAULT_PLOTLY_COLORS[i]),
                 hovertemplate ='%{text}',
                 text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
-                        'Predicted Opening Price: '+ "<b>" + np.round(filterData['predicted'],2).astype(str) + "</b> <br>",
+                        'Predicted Opening Price: '+ "<b>$" + np.round(filterData['predicted'],2).astype(str) + "</b> <br>",
                 hoverlabel=dict(
                     bgcolor=DEFAULT_PLOTLY_COLORS[i],
                     font_color='black',
@@ -220,7 +220,7 @@ def profitPlot(groupData, totalData, startDate, endDate, stocks):
                 line = dict(color=DEFAULT_PLOTLY_COLORS[i]),
                 hovertemplate ='%{text}',
                 text = 'Date: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
-                        'Cumulative Profit: '+ "<b>" + np.round(filterData['groupCumProfit'],2).astype(str) + "</b> <br>",
+                        'Cumulative Profit: '+ "<b>$" + np.round(filterData['groupCumProfit'],2).astype(str) + "</b> <br>",
                 hoverlabel=dict(
                     bgcolor=DEFAULT_PLOTLY_COLORS[i],
                     font_color='black',
@@ -262,9 +262,9 @@ def tradePlot(stockTrades, startDate, endDate, stocks):
                 hovertemplate ='%{text}',
                 text = 'Trade Iniated: '+ "<b>" + filterData.index.astype(str) + "</b> <br>"
                         'Number of Shares: '+ "<b>" + filterData['numShares'].astype(str) + "</b> <br>" +
-                        'Buy Price: '+ "<b>" + np.round(filterData['buyPrice'],2).astype(str) + "</b> <br>" +
+                        'Buy Price: '+ "<b>$" + np.round(filterData['buyPrice'],2).astype(str) + "</b> <br>" +
                         'Trade Ended: '+ "<b>" + filterData['sellDate'].astype(str) + "</b> <br>" +
-                        'Sell Price: '+ "<b>" + np.round(filterData['sellPrice'],2).astype(str) + "</b> <br>" +
+                        'Sell Price: '+ "<b>$" + np.round(filterData['sellPrice'],2).astype(str) + "</b> <br>" +
                         'Profit: '+ "<b>" + np.round(filterData['profit'],2).astype(str) + "</b> <br>",
                 hoverlabel=dict(
                     bgcolor=DEFAULT_PLOTLY_COLORS[i],

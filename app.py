@@ -50,10 +50,7 @@ app.layout = html.Div(children=[
             submit
 
                                     ], id="inner-column-left", className="column"), className="col-outer", id="outer-column-left"),
-        html.Div(html.Div(children=[
-            plots
-
-        ], id="inner-column-right"), className="col-outer", id="outer-column-right")
+        html.Div(html.Div(children=[plots], id="inner-column-right"), className="col-outer", id="outer-column-right")
     ])
 ], id="base")
 
@@ -90,20 +87,19 @@ def toggle_accordion(n1, n2, n3, n4, n5, is_open1, is_open2, is_open3, is_open4,
 def update_output(value):
     return f"{str(date.iloc[value[0],0])[0:10]} - {str(date.iloc[value[1],0])[0:10]}"
 
-
 # Callback for submit button
 @app.callback([
     Output('prediction-plot', 'figure'),
     Output('profit-plot', 'figure'),
     Output('trade-plot', 'figure')
-], [
-    Input("course-dropdown", 'value'),
-    Input('my-range-slider', 'value'),
-    Input("seed-input", 'value'),
-    Input("submit-changes-button", 'n_clicks'),
-    Input("risk-input", 'value')
-])
-def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
+], [Input("submit-changes-button", 'n_clicks')],
+state=[
+    State("course-dropdown", 'value'),
+    State('my-range-slider', 'value'),
+    State("seed-input", 'value'),
+    State("risk-input", 'value')]
+)
+def filterDashboard(numClicks, stocks, dateRange, seedValue, riskInput):
     # return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],["ford"])]
     if numClicks is None:  # Default Option
         groupProfits, totalProfits, stockTrades = trader(date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0], seedValue, data, stocks, riskInput)
@@ -111,15 +107,10 @@ def filterDashboard(stocks, dateRange, seedValue, numClicks, riskInput):
                 profitPlot(groupProfits, totalProfits, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0], stocks),
                 tradePlot(stockTrades, date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0],stocks)]
     else:
-        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
-        # if 'all' in stocks:  # if all stocks are selected
-        #     return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],allStocks)]
-        # else: # all other options
-        #     return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks)]
-
-
-    
-
+        groupProfits, totalProfits, stockTrades = trader(date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0], seedValue, data, stocks, riskInput)
+        return [predictionPlot(data, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0],stocks),
+                profitPlot(groupProfits, totalProfits, date.iloc[dateRange[0],0], date.iloc[dateRange[1],0], stocks),
+                tradePlot(stockTrades, date.iloc[dateRange[0],0],  date.iloc[dateRange[1],0],stocks)]
 
 # Start the Dash server
 if __name__ == '__main__':
