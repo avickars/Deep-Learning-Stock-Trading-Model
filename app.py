@@ -5,15 +5,15 @@ from columns.leftColumn import stocks, timeLine, seed, date, submit, risk
 from columns.rightColumn import predictions, profit, trades
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
-from columns.functions import trader, predictionPlot, profitPlot, tradePlot
+from project_functions.dashboard_functions import trader, predictionPlot, profitPlot, tradePlot
 import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Reading in Data
-data = pd.read_csv('Data/dataComplete.csv', index_col = 'Date')
+data = pd.read_csv('Data/Final Predictions/dataComplete.csv', index_col = 'Date')
 
-date = pd.read_csv('Data/dateRange.csv')
+date = pd.read_csv('Data/Final Predictions/dateRange.csv')
 date['Date'] = pd.to_datetime(date['Date'])
 
 navBar = dbc.Navbar(children=[
