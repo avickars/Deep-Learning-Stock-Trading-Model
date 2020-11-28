@@ -37,7 +37,7 @@ def transform(df, n=40):
     for i in range(1, n + 1):
         df[f'Open-{i}'] = df['Open'].shift(i)
 
-    # Subsetting for the neccessary columns
+    # Subsetting for the neccessary columns.  Chopping off the 1st 40 days as they contain null values (i.e. the data set doesn't contain the past 40 days of opening stock prices for them)
     df = df.iloc[40:, 0:]
 
     # Splitting into training and testing data (test size is about last 2 years)
@@ -175,8 +175,6 @@ def boostModel(tradingActionsTrain, tradingActionsTest):
                                                 'sell')
     return tradingActionsTest
 
-
-
 # This function accepts a df with columns ['Open', 'residuals', 'predicted', 'tomorrow', 'action'], returns the proportion of times we predict correctly that we should
 # buy or sell a stock
 def score(df):
@@ -186,8 +184,6 @@ def score(df):
                                            'sell')
     scoreValue = np.sum(df['action'] ==   df['trueAction'])/len(df)
     return scoreValue
-
-
 
 # Plots the training and test results of a model. 
 def plot(trainTruth, trainPreds, testTruth, testPreds, title):
@@ -206,7 +202,7 @@ def plot(trainTruth, trainPreds, testTruth, testPreds, title):
     # Top Right Subplot
     axes[1].plot(testTruth)
     axes[1].plot(testPreds)
-    axes[1].set_title("Testing Data")
+    axes[1].set_title("Validation Data")
     axes[1].legend(['Real', 'Predicted'])
     fig.show()
 
