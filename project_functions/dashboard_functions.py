@@ -22,6 +22,10 @@ DEFAULT_PLOTLY_COLORS=['rgb(31, 119, 180)', 'rgb(255, 127, 14)',
                     
 # This function optimizes our trades (its called in trader)
 def optimizer(data, liquidity, risk):
+    # The Model:
+    # Max ExpectedProfit*Number of Shares
+    # Subject to: {Sum for every stock S we are considering} Opening Price of S * Number of Shares <= liquidity (amount of money that isn't currently invested)
+    #             {for every stock S we are considering} Opening Price of S * Number of Shares <= liquidity*Risk
     data = data.set_index('stock')
 
     # CITATION: https://towardsdatascience.com/linear-programming-and-discrete-optimization-with-python-using-pulp-449f3c5f6e99
@@ -38,7 +42,7 @@ def optimizer(data, liquidity, risk):
     stockOptimizer += pulp.lpSum(ipVariables * data['expectedProfit'].values), "Z"
 
     # Defining the constrain that we don't spend more money than our liquidity
-    stockOptimizer += pulp.lpSum(ipVariables * data['price'].values) <= liquidity
+    stockOptimizer += pulp.lpSum(ipVariables * data['price'].values) <= liquidity* risk
 
     # Defining constrains that ensure we don't hold any one stock more than our risk amount allows
     for stock in ipVariables:
