@@ -19,4 +19,4 @@ Each of these Jupyter notebooks contains the fitting of the LSTM Neural Network 
 
 This python file is the dashboard that has been created to vizualize the results of the model.  To run this, run the python file using "python app.py", and navigate to the server location that is running locally that will appear in the command line.  For additional clarification, please see the image linked below.
 
-![fdsa](cmpt-353-stock-market-predictor/images/appStartup.png)
+![fdsa](https://csil-git1.cs.surrey.sfu.ca/avickars/cmpt-353-stock-market-predictor/-/blob/dca71cc6b2ad47151165d1a9aee611ca78ac1eb3/images/appStartup.PNG)
