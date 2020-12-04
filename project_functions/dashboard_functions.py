@@ -2,8 +2,6 @@ import pandas as pd
 from datetime import date, timedelta
 import numpy as np
 import plotly.graph_objects as go
-import plotly.express as px
-pd.options.mode.chained_assignment = None  # default='warn'
 import pulp
 
 stockNames = {"ford": "Ford",

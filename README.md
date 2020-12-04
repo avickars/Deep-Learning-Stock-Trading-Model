@@ -62,14 +62,41 @@ python {companyName}Model.ipynb
 * matplotlib
 * tensorflow
 
-
-
 #### app.py
 
-### Description
+##### Description
 
 This python file is the dashboard that has been created to vizualize the results of the model.  To run this, run the python file using "python app.py", and navigate to the server location that is running locally that will appear in the command line.  For additional clarification, please see the image linked below.
 
-### How to run it
+#### How to run it
 
-![](https://drive.google.com/file/d/1GXyUv3Yyr1oNyWF3LiUVMf6oHuciexmt/view?usp=sharing)
+1. Enter the Command Line Command
+```python
+python app.py
+```
+
+2. Click the indicated Link
+![Intial Startup Image](https://drive.google.com/file/d/1GXyUv3Yyr1oNyWF3LiUVMf6oHuciexmt/view?usp=sharing)
+
+3. Wait (approximately 20-30seconds depending on computer speed).  Ignore the indicated error (it is to do with the optimization model, I have not been able to disable it)
+
+![Ignore This Error](https://drive.google.com/file/d/1GXyUv3Yyr1oNyWF3LiUVMf6oHuciexmt/view?usp=sharing)
+
+4. Adjust Simulation Paraters as Desired
+
+Initial Parameters Are:
+* Stocks: All Companies
+* Time Range: November 19, 2018 - November 16, 2020 (Max Time Range)
+* Seed Money: $1000
+* Risk: 1
+
+To change Parameters See the Picture Linked Below
+
+##### Required Packages
+
+* dash
+* dash-bootstrap-components
+* plotly
+* pulp
+* numpy
+* pandas
