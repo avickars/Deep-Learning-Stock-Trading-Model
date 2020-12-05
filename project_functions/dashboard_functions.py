@@ -91,7 +91,8 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
                     # Recording the profit made on this trade
                     moneyOut = np.round(stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'buyPrice'].values[0], decimals=2)
                     moneyIn = np.round(stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'sellPrice'].values[0], decimals=2)
-                    stockTrades.loc[indices,'profit'] = stocks[stock].loc[date,:]['Open'] = moneyIn - moneyOut
+                    # stockTrades.loc[indices,'profit'] = stocks[stock].loc[date,:]['Open'] = moneyIn - moneyOut
+                    stockTrades.loc[indices,'profit'] = moneyIn - moneyOut
                     stockTrades.loc[indices,'sellDate'] = date
 
                     liquidity = liquidity + moneyIn         
