@@ -78,9 +78,7 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     liquidity = seedMoney
 
     i = 1
-    print('loading ', end='')
     for date in stocks[selectedStocks[0]].index: # Ierating through each day for the simulation
-        print('. ', end='')
         for stock in selectedStocks: # Iterating through each stock to make sure we sell off any stock that we want to
             # Lets sell some stock!
             if stocks[stock].loc[date,:]['predictedAction'] == 'sell':
@@ -126,27 +124,15 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     groupProfits = pd.merge(stockTrades, groupCumSum, on=['date', 'stock'])
 
     groupProfits = groupProfits.set_index('date', drop=True)
-    totalProfits2 = stockTrades.groupby('date').aggregate({'profit':['sum']})
-    totalProfits2.columns = totalProfits2.columns.droplevel(1) # CITATION: https://stackoverflow.com/questions/19078325/naming-returned-columns-in-pandas-aggregate-function
-    totalProfits2 = totalProfits2['profit'].cumsum()
-    totalProfits2 = pd.DataFrame(data=totalProfits2, columns=['profit'])
-    # totalProfits2 = totalProfits2.rename(columns={'sum':'profit'})
-    # # print(totalProfits)
-    # totalProfits = stockTrades.groupby('date').sum('profit')['profit'].cumsum()
-    # totalProfits = pd.DataFrame(data=totalProfits, columns=['profit'])
-
-    # print(totalProfits)
-    # print(totalProfits2)
+    totalProfits = stockTrades.groupby('date').aggregate({'profit':['sum']})
+    totalProfits.columns = totalProfits.columns.droplevel(1) # CITATION: https://stackoverflow.com/questions/19078325/naming-returned-columns-in-pandas-aggregate-function
+    totalProfits = totalProfits['profit'].cumsum()
+    totalProfits = pd.DataFrame(data=totalProfits, columns=['profit'])
 
     stockTrades = stockTrades.set_index('date')
-    return groupProfits, totalProfits2, stockTrades
-    # return groupProfits, totalProfits, stockTrades
+    return groupProfits, totalProfits, stockTrades
 
-# data = pd.read_csv('Data/Final Predictions/dataComplete.csv', index_col = 'Date')
-# stocks = ['ford', "nordstrom", "boa", "exxon", "forward"]
-# trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, stocks, 1)
-# groupProfits, totalProfits, stockTrades = trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, stocks, 1)
-# This function plots both the estimated prediction of the opening price and the true opening price
+
 def predictionPlot(data, startDate, endDate, stocks):
     # Checking to ensure our start/end dates are in the right form
     startDate = pd.to_datetime(startDate)
@@ -155,8 +141,14 @@ def predictionPlot(data, startDate, endDate, stocks):
     # Ensuring our data is read in correctly
     data = pd.DataFrame(data, columns=data.columns, index=pd.to_datetime(data.index))
 
+    # Creating title contents
+    title = ', '.join(stockNames[stock] for stock in stocks)
+
     # Initializing figure
     fig = go.Figure()
+
+    # Creating title
+    fig.update_layout(title=dict(text=f"<b>Predicted/True Stock Prices for {title}</b>", font_color='darkred'))
     i = 0
     for stock in stocks:
         # Filtering the data
@@ -205,7 +197,14 @@ def profitPlot(groupData, totalData, startDate, endDate, stocks):
     startDate = pd.to_datetime(startDate)
     endDate = pd.to_datetime(endDate)
 
+    # Creating title contents
+    title = ', '.join(stockNames[stock] for stock in stocks)
+
+    # Initializing figure
     fig = go.Figure()
+
+    # Creating title
+    fig.update_layout(title=dict(text=f"<b>Cumulative Profits of {title}</b>", font_color='darkred'))
     i = 0
     if len(stocks) > 1: # If plotting more than 1 stock, we will autmatically plot 'All' (i.e. the 2 stocks together)
         totalData = pd.DataFrame(totalData, columns=totalData.columns, index=pd.to_datetime(totalData.index))
@@ -262,6 +261,12 @@ def tradePlot(stockTrades, startDate, endDate, stocks):
 
     # Initializing our figure
     fig = go.Figure()
+
+    # Creating title contents
+    title = ', '.join(stockNames[stock] for stock in stocks)
+
+    # Creating title
+    fig.update_layout(title=dict(text=f"<b>Individual Trades of {title}</b>", font_color='darkred'))
 
     # Ensuring the stock trades are defined correctly
     stockTrades = pd.DataFrame(stockTrades, columns=stockTrades.columns, index=pd.to_datetime(stockTrades.index))

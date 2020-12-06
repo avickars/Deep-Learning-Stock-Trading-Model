@@ -2,19 +2,23 @@
 
 This README document details what each folder, and file contains as well as what they do and how to run them.
 
+NOTE: All code has been tested on CSIL.
+
+NOTE: The order of the scripts listed below is ordered according to how it should be run from the start of the model development to the finish. HOWEVER, all scripts are set up so that they can be run independent of order.  For instance, all data they load has all ready been saved in this repository so you don't need to run one script to generate the data for another.
+
 ## Scripts
 
-#### neuralNetwork.ipynb
+### neuralNetwork.ipynb
 
-##### Description
+#### Description
 
 This file contains the code that tunes the parameters of the chosen model on the stock data for Forward Industries.  The code that actually fits a model has been commented out and replaced with a code that reads in the model.  This is because actually fitting a model takes a significant amount of time.
 
-##### How to run it
+#### How to run it
 ```python
 python neuralNetwork.ipynb
 ```
-##### Required Packages
+#### Required Packages
 
 * datetime
 * numpy
@@ -22,18 +26,20 @@ python neuralNetwork.ipynb
 * keras
 * matplotlib
 * tensorflow
+* yahoo-finance (Only if running commented out code)
+* scikit-learn
 
-#### neuralNetworkAnalysis.ipynb
+### neuralNetworkAnalysis.ipynb
 
-##### Description
+#### Description
 
 This file contains the code that analyses the results of the model when applied on Forward Industries, and the subsequent boosting.
 
-##### How to run it
+#### How to run it
 ```python
 python neuralNetworkAnalysis.ipynb
 ```
-##### Required Packages
+#### Required Packages
 
 * datetime
 * numpy
@@ -41,19 +47,20 @@ python neuralNetworkAnalysis.ipynb
 * keras
 * matplotlib
 * tensorflow
+* scikit-learn
 
-#### {companyName}Model.ipynb
+### {companyName}Model.ipynb
 
-##### Description
+#### Description
 
 Each of these Jupyter notebooks contains the fitting of the LSTM Neural Network for each respective company.  The code that actually fits a model has been commented out and replaced with a code that reads in the model.  This is because actually fitting a model takes a significant amount of time.
 
-##### How to run it
+#### How to run it
 ```python
 python {companyName}Model.ipynb
 ```
 
-##### Required Packages
+#### Required Packages
 
 * datetime
 * numpy
@@ -61,10 +68,22 @@ python {companyName}Model.ipynb
 * keras
 * matplotlib
 * tensorflow
+* yahoo-finance (Only if running commented out code)
+* scikit-learn
 
-#### app.py
+### formattingData.ipynb
 
-##### Description
+#### Description
+
+The jupyter notebook contains the code the takes the predictions from each model and concatenates them into a single dataframe and outputs it.
+
+#### Required Packages
+
+* Pandas
+
+### app.py
+
+#### Description
 
 This python file is the dashboard that has been created to vizualize the results of the model.  To run this, run the python file using "python app.py", and navigate to the server location that is running locally that will appear in the command line.  For additional clarification, please see the image linked below.
 
@@ -94,7 +113,7 @@ To change Parameters See the Picture Linked Below
 
 ![Adjust Parameters Image](https://csil-git1.cs.surrey.sfu.ca/avickars/cmpt-353-stock-market-predictor/-/blob/728f5542e3b04b8c6545c5dc1a78d273e773e65d/readMe%20Images/parameters.PNG)
 
-##### Required Packages
+#### Required Packages
 
 * dash
 * dash-bootstrap-components
