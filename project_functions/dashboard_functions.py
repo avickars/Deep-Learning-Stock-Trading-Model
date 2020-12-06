@@ -78,8 +78,9 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     liquidity = seedMoney
 
     i = 1
-   
+    print('loading ', end='')
     for date in stocks[selectedStocks[0]].index: # Ierating through each day for the simulation
+        print('. ', end='')
         for stock in selectedStocks: # Iterating through each stock to make sure we sell off any stock that we want to
             # Lets sell some stock!
             if stocks[stock].loc[date,:]['predictedAction'] == 'sell':
@@ -91,7 +92,6 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
                     # Recording the profit made on this trade
                     moneyOut = np.round(stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'buyPrice'].values[0], decimals=2)
                     moneyIn = np.round(stockTrades.loc[indices, 'numShares'].values[0] * stockTrades.loc[indices, 'sellPrice'].values[0], decimals=2)
-                    # stockTrades.loc[indices,'profit'] = stocks[stock].loc[date,:]['Open'] = moneyIn - moneyOut
                     stockTrades.loc[indices,'profit'] = moneyIn - moneyOut
                     stockTrades.loc[indices,'sellDate'] = date
 
@@ -126,14 +126,26 @@ def trader(startDate, endDate, seedMoney, data, selectedStocks, risk):
     groupProfits = pd.merge(stockTrades, groupCumSum, on=['date', 'stock'])
 
     groupProfits = groupProfits.set_index('date', drop=True)
+    totalProfits2 = stockTrades.groupby('date').aggregate({'profit':['sum']})
+    totalProfits2.columns = totalProfits2.columns.droplevel(1) # CITATION: https://stackoverflow.com/questions/19078325/naming-returned-columns-in-pandas-aggregate-function
+    totalProfits2 = totalProfits2['profit'].cumsum()
+    totalProfits2 = pd.DataFrame(data=totalProfits2, columns=['profit'])
+    # totalProfits2 = totalProfits2.rename(columns={'sum':'profit'})
+    # # print(totalProfits)
+    # totalProfits = stockTrades.groupby('date').sum('profit')['profit'].cumsum()
+    # totalProfits = pd.DataFrame(data=totalProfits, columns=['profit'])
 
-    totalProfits = stockTrades.groupby('date').sum('profit')['profit'].cumsum()
-    totalProfits = pd.DataFrame(data=totalProfits, columns=['profit'])
+    # print(totalProfits)
+    # print(totalProfits2)
 
     stockTrades = stockTrades.set_index('date')
+    return groupProfits, totalProfits2, stockTrades
+    # return groupProfits, totalProfits, stockTrades
 
-    return groupProfits, totalProfits, stockTrades
-
+# data = pd.read_csv('Data/Final Predictions/dataComplete.csv', index_col = 'Date')
+# stocks = ['ford', "nordstrom", "boa", "exxon", "forward"]
+# trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, stocks, 1)
+# groupProfits, totalProfits, stockTrades = trader('2018-11-19 00:00:00', '2020-11-16 00:00:00', 1000, data, stocks, 1)
 # This function plots both the estimated prediction of the opening price and the true opening price
 def predictionPlot(data, startDate, endDate, stocks):
     # Checking to ensure our start/end dates are in the right form
