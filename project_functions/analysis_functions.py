@@ -7,9 +7,9 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-# Delete this ***********************************
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+# These 2 lines are just for me to run the models on my gpu.
+# physical_devices = tf.config.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 
 
 # Calculates the MSE 
@@ -88,7 +88,7 @@ def loadModel(name, location='Data'):
     print("Loaded model from disk")
 
 # This function trains a model
-def modelTraining(epoch, batchSize, xTrain,yTrain, neuronsLSTM1=50,neuronsDense=64, learningRate=0.0005):
+def modelTraining(epoch=2000, batchSize=10, xTrain,yTrain, neuronsLSTM1=50,neuronsDense=64, learningRate=0.0005):
     model = Sequential()
     model.add(LSTM(neuronsLSTM1,input_shape=(xTrain.shape[1],xTrain.shape[2])))
     model.add(Dropout(0.2))
