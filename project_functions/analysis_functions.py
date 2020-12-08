@@ -89,6 +89,7 @@ def loadModel(name, location='Data'):
 
 # This function trains a model
 def modelTraining(epoch=2000, batchSize=10, xTrain,yTrain, neuronsLSTM1=50,neuronsDense=64, learningRate=0.0005):
+    # CITATION: https://towardsdatascience.com/getting-rich-quick-with-machine-learning-and-stock-market-predictions-696802da94fe
     model = Sequential()
     model.add(LSTM(neuronsLSTM1,input_shape=(xTrain.shape[1],xTrain.shape[2])))
     model.add(Dropout(0.2))
