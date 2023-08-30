@@ -95,7 +95,7 @@ python app.py
 ```
 
 2. Click the indicated Link
-![Initial Startup Image](./readMe_Images/runAppPY.PNG)
+![Initial Startup Image]([./readMe_Images/runAppPY.PNG](https://github.com/avickars/Deep-Learning-Stock-Trading-Model/blob/main/readMe%20Images/runAppPY.PNG)
 
 3. Wait (approximately 20-30seconds depending on computer speed).  Ignore the indicated error (it is to do with the optimization model, I have not been able to disable it)
 
