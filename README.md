@@ -95,7 +95,7 @@ python app.py
 ```
 
 2. Click the indicated Link
-![Intial Startup Image](https://csil-git1.cs.surrey.sfu.ca/avickars/cmpt-353-stock-market-predictor/-/blob/728f5542e3b04b8c6545c5dc1a78d273e773e65d/readMe%20Images/runAppPY.PNG)
+![Intial Startup Image](./readMe Images/runAppPY.PNG)
 
 3. Wait (approximately 20-30seconds depending on computer speed).  Ignore the indicated error (it is to do with the optimization model, I have not been able to disable it)
 
