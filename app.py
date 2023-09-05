@@ -9,6 +9,7 @@ from project_functions.dashboard_functions import trader, predictionPlot, profit
 import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+server = app.server
 
 # Reading in Data
 data = pd.read_csv('Data/Final Predictions/dataComplete.csv', index_col = 'Date')
